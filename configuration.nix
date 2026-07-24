@@ -13,7 +13,8 @@ in
     ./kanata.nix
     ./xserver.nix
     ./firewall.nix
-    # ./ssh.nix
+    ./ssh.nix
+    # ./gnome.nix
     # ./hyprland.nix
   ];
 
@@ -23,14 +24,19 @@ in
 
   #networking
   networking.hostName = "nixos"; # Define your hostname.
-  networking.wireless.iwd.enable = true;
   time.timeZone = "America/Mexico_City";
   i18n.defaultLocale = "en_US.UTF-8";
   hardware.bluetooth.enable = true;
 
+  virtualisation.podman.enable = true;
   #security stuff
   security.polkit.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
+
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   #services
   services.gnome.gnome-keyring.enable = true;
@@ -39,12 +45,6 @@ in
 
   #power profile daemon
   services.power-profiles-daemon.enable = true;
-  
-  #when plugged use balanced, when unplugged use power saver
-  services.udev.extraRules = ''
-    SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="${pkgs.systemd}/bin/systemd-run --no-block --collect ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set power-saver"
-    SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="${pkgs.systemd}/bin/systemd-run --no-block --collect ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced"
-  '';
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -55,13 +55,22 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
+  hardware.enableRedistributableFirmware = true;
+  systemd.tmpfiles.rules = [
+    "L+ /etc/chromium/policies/managed/color.json - - - - /home/dante/.config/theme-monos/current/chromium_policy.json"
+  ];
   environment.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "chromium";
-    TERMINAL = "alacritty";
+    TERMINAL = "kitty";
   };
+  programs.dconf.enable = true;
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = "*";
+  };
 
   users.users."dante" = {
     isNormalUser = true;
@@ -69,6 +78,9 @@ in
     extraGroups = [
       "networkmanager"
       "wheel"
+    ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExt+GoQ1drn+8MhoD2o6ogAXnNN1SPaHfFTdVCIcyR3 macbook"
     ];
   };
 
@@ -79,6 +91,7 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
+
   environment.systemPackages = with pkgs; [
     #pkgs_start
     github-cli
@@ -87,30 +100,43 @@ in
     nixfmt
     wget
     git
+    bash-language-server
+    shfmt
     fd
     fzf
     polkit_gnome
+    j4-dmenu-desktop
+    nix-search-tv
     gnome-keyring
     ripgrep
     brightnessctl
     imagemagick
     impala
-    xdg-desktop-portal-gtk
     bluetui
     bluez
     btop
-    chromium
+    adwaita-icon-theme
     kitty
+    fastfetch
     jq
     unzip
+    python3
     yazi
+    spotify
+    chromium
     tmux
     libnotify
     alacritty
+    lazygit
     wiremix
     rsync
     localsend
+    rsync
+    imagemagick
+    vlc
+    ffmpeg-full
     unstable.antigravity-cli
+    xdg-utils
     #pkgs_end
   ];
 

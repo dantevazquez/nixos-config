@@ -5,6 +5,7 @@
   programs.waybar.enable = true;
   services.displayManager.ly.enable = true;
 
+  networking.wireless.iwd.enable = true;
   # Packages that only Hyprland/Wayland will use
   environment.systemPackages = with pkgs; [
 

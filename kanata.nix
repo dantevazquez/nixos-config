@@ -9,7 +9,8 @@
           lmeta lalt rmeta ralt 
           c v z x t f 
           1 2 3 4 5 6 7 8 9 
-          tab b ret w a s l q spc
+          tab b ret w a s l q spc i
+          lsft rsft p
         )
 
         (deffakekeys
@@ -28,15 +29,15 @@
           mac-s C-s
           mac-l C-l
 
-          mac-1 C-1
-          mac-2 C-2
-          mac-3 C-3
-          mac-4 C-4
-          mac-5 C-5
-          mac-6 C-6
-          mac-7 C-7
-          mac-8 C-8
-          mac-9 C-9
+          mac-1 (fork C-1 M-S-1 (lsft rsft))
+          mac-2 (fork C-2 M-S-2 (lsft rsft))
+          mac-3 (fork C-3 M-S-3 (lsft rsft))
+          mac-4 (fork C-4 M-S-4 (lsft rsft))
+          mac-5 (fork C-5 M-S-5 (lsft rsft))
+          mac-6 (fork C-6 M-S-6 (lsft rsft))
+          mac-7 (fork C-7 M-S-7 (lsft rsft))
+          mac-8 (fork C-8 M-S-8 (lsft rsft))
+          mac-9 (fork C-9 M-S-9 (lsft rsft))
           
           ;; Press and hold the virtual 'super' key, wait 15ms, then send Tab
           wm-tab (macro (on-press-fakekey super press) 15 tab)
@@ -44,23 +45,27 @@
           wm-ret M-ret
           wm-q M-q
           wm-spc M-spc
+          wm-i M-i
+          wm-p M-p
 
-          ;; Toggle the layer, and release the virtual 'super' key when Left Alt is released
-          cmd-layer (multi (layer-toggle mac-cmd) (on-release-fakekey super release))
+          ;; Toggle the layer, and release the virtual 'super' key when Left Alt is released. On tap, send plain Super.
+          cmd-layer (tap-hold 200 200 lmeta (multi (layer-toggle mac-cmd) (on-release-fakekey super release)))
         )
 
         (deflayer default
           lalt @cmd-layer ralt @cmd-layer 
           c v z x t f 
           1 2 3 4 5 6 7 8 9 
-          tab b ret w a s l q spc
+          tab b ret w a s l q spc i
+          lsft rsft p
         )
 
         (deflayer mac-cmd
           _ _ _ _ 
           @mac-c @mac-v @mac-z @mac-x @mac-t @mac-f 
           @mac-1 @mac-2 @mac-3 @mac-4 @mac-5 @mac-6 @mac-7 @mac-8 @mac-9 
-          @wm-tab @wm-b @wm-ret @mac-w @mac-a @mac-s @mac-l @wm-q @wm-spc
+          @wm-tab @wm-b @wm-ret @mac-w @mac-a @mac-s @mac-l @wm-q @wm-spc @wm-i
+          _ _ @wm-p
         )
       '';
     };
