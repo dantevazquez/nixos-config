@@ -1,21 +1,21 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  unstablePkgs,
+  ...
+}:
 
-let
-  unstable = import <nixos-unstable> {
-    config.allowUnfree = true;
-  };
-in
 {
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./bash.nix
     ./kanata.nix
-    ./xserver.nix
     ./firewall.nix
     ./ssh.nix
-    # ./gnome.nix
+    ./niri.nix
+    # ./monowm.nix
     # ./hyprland.nix
+    # ./xserver.nix
   ];
 
   # Bootloader.
@@ -28,11 +28,10 @@ in
   i18n.defaultLocale = "en_US.UTF-8";
   hardware.bluetooth.enable = true;
 
-  virtualisation.podman.enable = true;
   #security stuff
   security.polkit.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
-
+  programs.ydotool.enable = true;
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
@@ -42,6 +41,7 @@ in
   services.gnome.gnome-keyring.enable = true;
   services.printing.enable = true;
   services.envfs.enable = true; # make bash scripts work
+  virtualisation.podman.enable = true;
 
   #power profile daemon
   services.power-profiles-daemon.enable = true;
@@ -56,9 +56,7 @@ in
     pulse.enable = true;
   };
   hardware.enableRedistributableFirmware = true;
-  systemd.tmpfiles.rules = [
-    "L+ /etc/chromium/policies/managed/color.json - - - - /home/dante/.config/theme-monos/current/chromium_policy.json"
-  ];
+
   environment.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "chromium";
@@ -66,22 +64,24 @@ in
   };
   programs.dconf.enable = true;
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.common.default = "*";
-  };
+  users.users = {
+    dante = {
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "input"
+      ];
 
-  users.users."dante" = {
-    isNormalUser = true;
-    description = "dante";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExt+GoQ1drn+8MhoD2o6ogAXnNN1SPaHfFTdVCIcyR3 macbook"
-    ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExt+GoQ1drn+8MhoD2o6ogAXnNN1SPaHfFTdVCIcyR3 macbook"
+      ];
+    };
+
+    lexi = {
+      isNormalUser = true;
+      extraGroups = [ "networkmanager" ];
+    };
   };
 
   #fonts
@@ -90,7 +90,6 @@ in
   ];
 
   nixpkgs.config.allowUnfree = true;
-
 
   environment.systemPackages = with pkgs; [
     #pkgs_start
@@ -105,7 +104,7 @@ in
     fd
     fzf
     polkit_gnome
-    j4-dmenu-desktop
+    github-desktop
     nix-search-tv
     gnome-keyring
     ripgrep
@@ -115,18 +114,16 @@ in
     bluetui
     bluez
     btop
+    eza
     adwaita-icon-theme
-    kitty
-    fastfetch
     jq
     unzip
     python3
     yazi
-    spotify
     chromium
     tmux
     libnotify
-    alacritty
+    nautilus
     lazygit
     wiremix
     rsync
@@ -135,7 +132,7 @@ in
     imagemagick
     vlc
     ffmpeg-full
-    unstable.antigravity-cli
+    unstablePkgs.antigravity-cli
     xdg-utils
     #pkgs_end
   ];
