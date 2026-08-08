@@ -18,7 +18,7 @@
       ls = "ls -la --color=auto";
       nixedit = "sudoedit /etc/nixos/configuration.nix";
       nixclean = "sudo nix-collect-garbage -d && sudo nixos-rebuild switch --flake /home/dante/nixos-config/#nixos";
-      nixupgrade = "sudo nixos-rebuild switch --upgrade";
+      nixupgrade = "sudo nix flake update && sudo nixos-rebuild switch --flake /home/dante/nixos-config/#nixos";
       open = "xdg-open";
       tc = "tmux new-session -A -s code";
       ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";

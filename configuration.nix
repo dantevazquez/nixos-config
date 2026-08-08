@@ -31,7 +31,7 @@
   #security stuff
   security.polkit.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
-  programs.ydotool.enable = true;
+  services.fprintd.enable = true;
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
