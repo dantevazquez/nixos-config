@@ -1,0 +1,92 @@
+.TH DWM 1 dwm\-VERSION
+.SH NAME
+dwm \- dynamic window manager
+.SH SYNOPSIS
+.B dwm
+.RB [ \-v ]
+.SH DESCRIPTION
+dwm is a minimal keyboard-driven window manager for X. Each window is assigned
+to the first available tag and maximised in the usable screen area. Floating
+windows are centred and cannot be moved or resized by dragging.
+.P
+Closing a window compacts the remaining windows into the lowest available tags.
+The displayed tag is preserved when possible; if the last occupied tag is
+removed, the new last occupied tag is displayed. The configured number of tags
+therefore determines the number of windows that can each have a unique tag.
+.P
+Each screen contains a small status bar which displays the total number of open
+windows in brackets, the title of the focused window, and the text read from the
+root window name property if the screen is focused. Tag labels are hidden. A
+floating window is indicated with a square before the window title.
+.P
+dwm draws a small border around windows to indicate the focus state.
+.SH OPTIONS
+.TP
+.B \-v
+prints version information to stderr, then exits.
+.SH USAGE
+.SS Status bar
+.B X root window name
+is read and displayed in the status text area. It can be set with the
+.BR xsetroot (1)
+command.
+.SS Keyboard commands
+.TP
+.B Mod1\-Shift\-Return
+Start
+.BR st(1).
+.TP
+.B Mod1\-p
+Spawn
+.BR dmenu(1)
+for launching other programs.
+.TP
+.B Mod1\-,
+Focus previous screen, if any.
+.TP
+.B Mod1\-.
+Focus next screen, if any.
+.TP
+.B Mod1\-b
+Toggles bar on and off.
+.TP
+.B Mod1\-Shift\-c
+Close focused window.
+.TP
+.B Mod1\-Shift\-space
+Toggle the focused window between maximised and centred floating states.
+.TP
+.B Mod1\-Tab
+Cycle through open windows while Mod1 is held, then display the selected
+window's tag when Mod1 is released.
+.TP
+.B Mod1\-[1..n]
+View the window assigned to the nth tag.
+.TP
+.B Mod1\-o
+Display the tag assigned to the focused window.
+.TP
+.B Mod1\-Shift\-q
+Quit dwm.
+.SH CUSTOMIZATION
+dwm is customized by creating a custom config.h and (re)compiling the source
+code. This keeps it fast, secure and simple.
+.SH SEE ALSO
+.BR dmenu (1),
+.BR st (1)
+.SH ISSUES
+Java applications which use the XToolkit/XAWT backend may draw grey windows
+only. The XToolkit/XAWT backend breaks ICCCM-compliance in recent JDK 1.5 and early
+JDK 1.6 versions, because it assumes a reparenting window manager. Possible workarounds
+are using JDK 1.4 (which doesn't contain the XToolkit/XAWT backend) or setting the
+environment variable
+.BR AWT_TOOLKIT=MToolkit
+(to use the older Motif backend instead) or running
+.B xprop -root -f _NET_WM_NAME 32a -set _NET_WM_NAME LG3D
+or
+.B wmname LG3D
+(to pretend that a non-reparenting window manager is running that the
+XToolkit/XAWT backend can recognize) or when using OpenJDK setting the environment variable
+.BR _JAVA_AWT_WM_NONREPARENTING=1 .
+.SH BUGS
+Send all bug reports with a patch to hackers@suckless.org.

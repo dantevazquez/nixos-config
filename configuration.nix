@@ -1,18 +1,18 @@
 {
   config,
   pkgs,
-  unstablePkgs,
   ...
 }:
 
 {
   imports = [
     ./hardware-configuration.nix
-    ./bash.nix
+    ./zsh.nix
     ./kanata.nix
     ./firewall.nix
+    ./suckless.nix
     ./ssh.nix
-    ./niri.nix
+    # ./niri.nix
     # ./monowm.nix
     # ./hyprland.nix
     # ./xserver.nix
@@ -27,21 +27,21 @@
   time.timeZone = "America/Mexico_City";
   i18n.defaultLocale = "en_US.UTF-8";
   hardware.bluetooth.enable = true;
+  networking.wireless.iwd.enable = true;
+  networking.nameservers = [
+    "1.1.1.1"
+    "8.8.8.8"
+  ];
 
   #security stuff
   security.polkit.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
   services.fprintd.enable = true;
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
 
   #services
   services.gnome.gnome-keyring.enable = true;
   services.printing.enable = true;
   services.envfs.enable = true; # make bash scripts work
-  virtualisation.podman.enable = true;
 
   #power profile daemon
   services.power-profiles-daemon.enable = true;
@@ -56,16 +56,17 @@
     pulse.enable = true;
   };
   hardware.enableRedistributableFirmware = true;
-
+  services.dbus.enable = true;
+  programs.dconf.enable = true;
   environment.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "chromium";
-    TERMINAL = "kitty";
+    TERMINAL = "alacritty";
   };
-  programs.dconf.enable = true;
 
   users.users = {
     dante = {
+      shell = pkgs.zsh;
       isNormalUser = true;
       extraGroups = [
         "wheel"
@@ -74,13 +75,8 @@
       ];
 
       openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExt+GoQ1drn+8MhoD2o6ogAXnNN1SPaHfFTdVCIcyR3 macbook"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIHg+K1yITPJ1SFA+/4IcfGcmDXkT14KMegNsksk6TaV macbook"
       ];
-    };
-
-    lexi = {
-      isNormalUser = true;
-      extraGroups = [ "networkmanager" ];
     };
   };
 
@@ -102,9 +98,9 @@
     bash-language-server
     shfmt
     fd
+    alacritty
     fzf
     polkit_gnome
-    github-desktop
     nix-search-tv
     gnome-keyring
     ripgrep
@@ -114,25 +110,26 @@
     bluetui
     bluez
     btop
+    google-chrome
     eza
+    ueberzugpp
     adwaita-icon-theme
     jq
     unzip
     python3
     yazi
-    chromium
     tmux
     libnotify
-    nautilus
     lazygit
     wiremix
-    rsync
-    localsend
+    chromium
+    tree-sitter
+    gcc
     rsync
     imagemagick
     vlc
+    clang-tools
     ffmpeg-full
-    unstablePkgs.antigravity-cli
     xdg-utils
     #pkgs_end
   ];

@@ -1,48 +1,22 @@
 { config, pkgs, ... }:
 
 {
-  environment.sessionVariables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-    XCURSOR_SIZE = "48";
-    XCURSOR_THEME = "Adwaita";
-    XCURSOR_SUPPRESS_RANDR_SIZE = "1";
-  };
 
-  programs.bash = {
-    completion.enable = true;
+  programs.zsh = {
+    enable = true;
+
+    syntaxHighlighting.enable = true;
 
     shellAliases = {
-      grep = "grep --color=auto";
-      icat = "kitty +kitten icat";
-      ls = "ls -la --color=auto";
+      nrs = "sudo nixos-rebuild switch";
       nixedit = "sudoedit /etc/nixos/configuration.nix";
-      nixclean = "sudo nix-collect-garbage -d && sudo nixos-rebuild switch --flake /home/dante/nixos-config/#nixos";
-      nixupgrade = "sudo nix flake update && sudo nixos-rebuild switch --flake /home/dante/nixos-config/#nixos";
-      open = "xdg-open";
-      tc = "tmux new-session -A -s code";
+      nixclean = "sudo nix-collect-garbage -d && sudo nixos-rebuild switch";
+      nixupgrade = "sudo nixos-rebuild switch --upgrade";
       ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
     };
 
     interactiveShellInit = ''
-      parse_git_branch() {
-          git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-      }
 
-      export PS1='[\u@\h \W$(parse_git_branch)]\$ '
-      export PATH="$HOME/.local/bin:$HOME/.config/scripts:$PATH"
-      export PATH="$HOME/.cargo/bin:$PATH"
-
-      eval "$(fzf --bash)"
-
-      fcd() {
-          local dir
-          dir=$(fd --type d --hidden --exclude .git | fzf) && cd "$dir"
-      }
-
-      bind "set completion-ignore-case on"
-      bind "set show-all-if-ambiguous on"
-      set -o vi
 
       nixadd() {
           local selected
@@ -119,4 +93,5 @@
       }
     '';
   };
+
 }
