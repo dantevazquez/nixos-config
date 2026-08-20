@@ -24,7 +24,6 @@
 
   # Packages that only Niri/Wayland will use
   environment.systemPackages = with pkgs; [
-    xwayland-satellite # Required for running legacy X11 apps under Niri
     unstablePkgs.noctalia
     foot
   ];

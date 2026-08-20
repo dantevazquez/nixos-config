@@ -12,9 +12,9 @@
     ./firewall.nix
     ./suckless.nix
     ./ssh.nix
+    ./packages.nix
     # ./niri.nix
     # ./monowm.nix
-    # ./hyprland.nix
     # ./xserver.nix
   ];
 
@@ -28,10 +28,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
   hardware.bluetooth.enable = true;
   networking.wireless.iwd.enable = true;
-  networking.nameservers = [
-    "1.1.1.1"
-    "8.8.8.8"
-  ];
 
   #security stuff
   security.polkit.enable = true;
@@ -80,59 +76,7 @@
     };
   };
 
-  #fonts
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-  ];
-
   nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs; [
-    #pkgs_start
-    github-cli
-    neovim
-    nixd
-    nixfmt
-    wget
-    git
-    bash-language-server
-    shfmt
-    fd
-    alacritty
-    fzf
-    polkit_gnome
-    nix-search-tv
-    gnome-keyring
-    ripgrep
-    brightnessctl
-    imagemagick
-    impala
-    bluetui
-    bluez
-    btop
-    google-chrome
-    eza
-    ueberzugpp
-    adwaita-icon-theme
-    jq
-    unzip
-    python3
-    yazi
-    tmux
-    libnotify
-    lazygit
-    wiremix
-    chromium
-    tree-sitter
-    gcc
-    rsync
-    imagemagick
-    vlc
-    clang-tools
-    ffmpeg-full
-    xdg-utils
-    #pkgs_end
-  ];
 
   system.stateVersion = "26.05";
 }
