@@ -3,8 +3,6 @@
 {
   programs.niri.enable = true;
 
-  networking.wireless.iwd.enable = true;
-
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [

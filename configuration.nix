@@ -10,10 +10,10 @@
     ./zsh.nix
     ./kanata.nix
     ./firewall.nix
-    ./suckless.nix
+    # ./suckless.nix
     ./ssh.nix
     ./packages.nix
-    # ./niri.nix
+    ./niri.nix
     # ./monowm.nix
     # ./xserver.nix
   ];
